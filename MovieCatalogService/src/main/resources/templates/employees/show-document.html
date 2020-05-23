@@ -1,0 +1,43 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Show All Document</title>
+        <style>
+            img {
+                border: 1px solid #ddd; /* Gray border */
+                border-radius: 4px;  /* Rounded border */
+                padding: 5px; /* Some padding */
+                width: 150px; /* Set a small width */
+                height: 170px;
+                margin-right: 16px;
+                border-color: black;
+                user-select: contain;
+            }
+            img:hover {
+                box-shadow: 0 0 2px 1px rgba(0, 140, 186, 0.5);
+            }
+        </style>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    </head>
+    <body>
+        <h3>All Documents</h3>
+        <hr>
+        <span th:each="document: ${documents}">
+            <span th:if="${document.contentType == 'application/pdf'}">
+                <a th:href="@{/document/getDoc(documentId=${document.id})}">
+                    <img th:src="@{/document/getImage(documentId=${document.id})}">
+                </a>
+            </span>
+            <span th:if="${document.contentType == 'image/jpeg'}">
+                <a th:href="@{/document/getDoc(documentId=${document.id})}">
+                    <img onclick="setFocus()" id="focus" th:src="@{/document/getDoc(documentId=${document.id})}">
+                </a>
+            </span>
+        </span>
+        <script type="text/javascript">
+            function setFocus() {
+                document.getElementById("focus").focus();
+            }
+        </script>
+    </body>
+</html>
