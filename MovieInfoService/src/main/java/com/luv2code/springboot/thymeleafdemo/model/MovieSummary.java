@@ -9,11 +9,11 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class Movie {
+public class MovieSummary {
 
-    private String movieId;
+    private String id;
 
-    private String name;
+    private String title;
 
-    private String description;
+    private String overview;
 }

@@ -1,8 +1,9 @@
 package com.luv2code.springboot.thymeleafdemo.resource;
 
 import com.luv2code.springboot.thymeleafdemo.model.CatalogItem;
-import com.luv2code.springboot.thymeleafdemo.model.Movie;
 import com.luv2code.springboot.thymeleafdemo.model.UserRating;
+import com.luv2code.springboot.thymeleafdemo.service.MovieInfo;
+import com.luv2code.springboot.thymeleafdemo.service.UserRatingInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,20 +28,19 @@ public class MovieCatalogResource {
     @Autowired
     private WebClient.Builder webClientBuilder;
 
+    @Autowired
+    private MovieInfo movieInfo;
+
+    @Autowired
+    private UserRatingInfo userRatingInfo;
+
     @RequestMapping("/{userId}")
     public List<CatalogItem> getCatalog(@PathVariable("userId") String userId) {
 
-        UserRating ratings = restTemplate.getForObject("http://rating-data-source/ratingsdata/users/"
-                        + userId,
-                UserRating.class
-        );
-
+        UserRating ratings = userRatingInfo.getUserRating(userId);
         return ratings.getUserRatings().stream()
                 .map(rating -> {
-                    Movie movie = restTemplate.getForObject("http://movie-info-service/movies/"
-                                    + rating.getMovieId(),
-                                    Movie.class
-                    );
+                    return movieInfo.getCatalogItem(rating);
 //                    Movie movie = webClientBuilder.build()
 //                            .get()
 //                            .uri("http://localhost:8082/movies/"
@@ -48,7 +48,6 @@ public class MovieCatalogResource {
 //                            .retrieve()
 //                            .bodyToMono(Movie.class)
 //                            .block();
-                    return new CatalogItem(movie.getName(), "Test", rating.getRating());
                 })
                 .collect(Collectors.toList());
     }

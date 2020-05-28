@@ -9,5 +9,7 @@ import java.util.List;
 @ToString
 public class UserRating {
 
+    private String userId;
+
     private List<Rating> userRatings;
 }
